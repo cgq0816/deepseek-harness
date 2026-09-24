@@ -1,0 +1,5 @@
+export const ENTERPRISE_PLUGIN_VERSION = '0.1.3'
+export const DSH_RUNTIME_BASELINE = '0.1.5-rc.2'
+
+export const ENTERPRISE_RELEASE_LABEL =
+  `DSH ${DSH_RUNTIME_BASELINE} / Enterprise Plugin ${ENTERPRISE_PLUGIN_VERSION}`

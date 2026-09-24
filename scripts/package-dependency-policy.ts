@@ -7,6 +7,10 @@ const CLIENT_FACE_INCLUDE: readonly string[] = []
 const CLIENT_FACE_EXCLUDE: readonly string[] = [
   '@deepseek-ai/dsh-api-session-controller',
   '@deepseek-ai/dsh-api-workspace-controller',
+  // The enterprise bundle ships prebuilt JavaScript with no TypeScript source,
+  // so no source import can classify its dependencies; its peers are pinned to
+  // the workspace and its artifacts enter the build through no emit step.
+  '@deepseek-ai/dsh-coagents-enterprise',
 ]
 
 /** Host-only packages whose peer relays are deliberately flattened. */

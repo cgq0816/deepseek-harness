@@ -1,10 +1,10 @@
 /**
  * Generate `docs/config-catalog.md` from package entry points, config types,
- * JSDoc, and static Schemastery schemas. Every package must classify, referenced
- * types must resolve without collisions, and every enumerable schema path must
- * exist on the declared config type. External and dynamic types stay unknown;
- * declared runtime-only fields need not appear in the schema. `--check` verifies
- * the committed artifact.
+ * JSDoc, and static Schemastery schemas. Every package with TypeScript source
+ * must classify, referenced types must resolve without collisions, and every
+ * enumerable schema path must exist on the declared config type. External and
+ * dynamic types stay unknown; declared runtime-only fields need not appear in
+ * the schema. `--check` verifies the committed artifact.
  */
 
 import { globSync, readFileSync, writeFileSync } from 'node:fs'
@@ -31,6 +31,10 @@ const GLOBAL_TYPES = new Set([
   'Promise', 'Map', 'Set', 'Date', 'Error', 'RegExp', 'Exclude', 'Extract', 'NonNullable',
   'ReturnType', 'Parameters', 'AbortSignal', 'URL', 'Buffer', 'NodeJS', 'Iterable', 'AsyncIterable',
 ])
+
+/** Deployment-owned bundles that ship prebuilt JavaScript without TypeScript
+ * source, so there is no plugin class, Config type, or schema to catalog. */
+const PREBUILT_PACKAGES = new Set(['@deepseek-ai/dsh-coagents-enterprise'])
 
 /** How a package classifies for the catalog. */
 type Kind = 'config' | 'no-config' | 'seam' | 'library'
@@ -690,6 +694,11 @@ export function collectConfigCatalog(scanRoot: string = root): CatalogEntry[] {
     if (manifest.os !== undefined && manifest.cpu !== undefined) {
       // A per-platform native-binary package (npm os/cpu selection) ships no
       // JavaScript at all — nothing to classify, no Config to catalog.
+      continue
+    }
+    if (PREBUILT_PACKAGES.has(pkg)) {
+      // A prebuilt bundle carries no TypeScript source, so the walk below has
+      // no entry to classify.
       continue
     }
     pkgDirByName.set(pkg, dir)

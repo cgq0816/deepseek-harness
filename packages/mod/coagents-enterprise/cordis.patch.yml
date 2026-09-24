@@ -1,0 +1,12 @@
+- insert:
+    # The package's modules are prebuilt JavaScript bundled by its own build,
+    # so the row names the built entry beside this patch; patch loading anchors
+    # it as a file URL.
+    - id: coagents-enterprise
+      name: './lib/index.js'
+      config:
+        baseUrl: !!js process.env.ENTERPRISE_BASE_URL || process.env.RCLAW_BASE_URL
+        orgCode: !!js process.env.ENTERPRISE_ORG_CODE || process.env.RCLAW_ORG_CODE
+        clientVersion: !!js process.env.ENTERPRISE_CLIENT_VERSION || process.env.RCLAW_CLIENT_VERSION
+        openBrowser: !!js (process.env.ENTERPRISE_DISABLE_BROWSER_OPEN || process.env.RCLAW_DISABLE_BROWSER_OPEN) !== '1'
+        allowConnectionEditing: !!js (process.env.ENTERPRISE_CONNECTION_EDITABLE || '1') !== '0'

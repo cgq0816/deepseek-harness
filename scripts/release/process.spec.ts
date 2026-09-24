@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { capture, pnpmCommand } from './process.ts'
-import { packedIdentity, tarballFiles } from './tarball.ts'
+import { packedIdentity, packedManifest, tarballFiles } from './tarball.ts'
 
 const directories: string[] = []
 
@@ -47,5 +47,10 @@ describe('release tarball readers', () => {
   it('reads what an archive declares about itself', async () => {
     const archive = await packedTarball('@deepseek-ai/dsh-probe', '1.2.3')
     expect(packedIdentity(archive)).toEqual({ name: '@deepseek-ai/dsh-probe', version: '1.2.3' })
+  })
+
+  it('reads the full manifest an archive declares', async () => {
+    const archive = await packedTarball('@deepseek-ai/dsh-probe', '1.2.3')
+    expect(packedManifest(archive)).toEqual({ name: '@deepseek-ai/dsh-probe', version: '1.2.3' })
   })
 })
